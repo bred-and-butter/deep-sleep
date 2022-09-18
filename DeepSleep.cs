@@ -11,12 +11,14 @@ namespace DeepSleep
     public class SleepDeprivation : IActivePart
     {
         [SerializeField]
-        public int fatigue;
+        private int fatigue;
+        private Disposition disposition;
 
         public SleepDeprivation()
         {
             WorksOnSelf = true;
             this.fatigue = 0;
+            this.disposition = new Disposition();
         }
 
         public override bool WantEvent(int ID, int cascade)
@@ -44,13 +46,15 @@ namespace DeepSleep
             if (obj.HasEffect("Asleep"))
             {
                 DecreaseFatigue(10);
-                IComponent<GameObject>.AddPlayerMessage(Checker.Thresholds(this.fatigue));
+                this.disposition.CheckStateChange(this.fatigue);
+                IComponent<GameObject>.AddPlayerMessage(this.disposition.GetState().GetDescription());
                 IComponent<GameObject>.AddPlayerMessage(this.fatigue.ToString());
             }
             else
             {
                 IncreaseFatigue(1);
-                IComponent<GameObject>.AddPlayerMessage(Checker.Thresholds(this.fatigue));
+                this.disposition.CheckStateChange(this.fatigue);
+                IComponent<GameObject>.AddPlayerMessage(this.disposition.GetState().GetDescription());
                 IComponent<GameObject>.AddPlayerMessage(this.fatigue.ToString());
             }
         }

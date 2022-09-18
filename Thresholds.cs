@@ -1,64 +1,63 @@
+using States;
+using System.Collections.Generic;
+
 namespace Thresholds
 {
-    public class Checker
+    public class Disposition
     {
-        readonly static int rested = 1200; // 1 in-game day
-        readonly static int tired = 2400;   // 2 days
-        readonly static int drowsy = 3600;  // 3 days
-        readonly static int fatigued = 4800;   // 4 days
+        private SleepState currentState;
+        private Dictionary<int, SleepState> possibleStates = new Dictionary<int, SleepState>(){
+            {0, new Level0()},
+            {1, new Level1()},
+            {2, new Level2()},
+            {3, new Level3()},
+            {4, new Level4()},
+        };
 
-        public static string Thresholds(int fatigue)
+        public Disposition()
         {
-            if (fatigue <= Checker.rested)
+            this.currentState = this.possibleStates[0];
+        }
+
+        public void SetState(SleepState state)
+        {
+            this.currentState = state;
+        }
+
+        public SleepState GetState()
+        {
+            return this.currentState;
+        }
+
+        public bool CheckStateChange(int fatigue, int modifier = 1)
+        {
+            if (fatigue <= this.possibleStates[0].GetValue(modifier))
             {
-                return "Rested";
+                this.SetState(this.possibleStates[0]);
+                return true;
             }
-            else if (fatigue > Checker.rested && fatigue <= Checker.tired)
+            else if (fatigue > this.possibleStates[0].GetValue(modifier) && fatigue <= this.possibleStates[1].GetValue(modifier))
             {
-                return "Tired";
+                this.SetState(this.possibleStates[1]);
+                return true;
             }
-            else if (fatigue > Checker.tired && fatigue <= Checker.drowsy)
+            else if (fatigue > this.possibleStates[1].GetValue(modifier) && fatigue <= this.possibleStates[2].GetValue(modifier))
             {
-                return "Drowsy";
+                this.SetState(this.possibleStates[2]);
+                return true;
             }
-            else if (fatigue > Checker.drowsy && fatigue <= Checker.fatigued)
+            else if (fatigue > this.possibleStates[2].GetValue(modifier) && fatigue <= this.possibleStates[3].GetValue(modifier))
             {
-                return "Fatigued";
+                this.SetState(this.possibleStates[3]);
+                return true;
             }
-            else if (fatigue > Checker.fatigued)
+            else if (fatigue > this.possibleStates[3].GetValue(modifier))
             {
-                return "Exhausted";
+                this.SetState(this.possibleStates[4]);
+                return true;
             }
-            return "Error";
+            return false;
         }
     }
-
-    public class Threshold
-    {
-        private readonly int value;
-        private string description;
-
-        public Threshold(int value, string description)
-        {
-            this.value = value;
-            this.description = description;
-        }
-
-        public void IsInThreshold(int fatigue, int modifier)
-        {
-
-        }
-
-        public string GetDescription()
-        {
-            return this.description;
-        }
-
-        public void SetDescription(string description)
-        {
-            this.description = description;
-        }
-
-    }
-
 }
+
