@@ -1,2 +1,2 @@
-# deep-sleep
+# Deeper sleep
 A small Caves of Qud mod that deepens the sleep mechanic
