@@ -1,4 +1,5 @@
 using System;
+
 using XRL.World;
 using XRL.World.Parts;
 using SerializeField = UnityEngine.SerializeField;
@@ -11,7 +12,7 @@ namespace DeepSleep
     public class SleepDeprivation : IActivePart
     {
         [SerializeField]
-        private int fatigue;
+        public int fatigue;
         private Disposition disposition;
 
         public SleepDeprivation()
@@ -46,15 +47,17 @@ namespace DeepSleep
             if (obj.HasEffect("Asleep"))
             {
                 DecreaseFatigue(10);
-                this.disposition.CheckStateChange(this.fatigue);
-                IComponent<GameObject>.AddPlayerMessage(this.disposition.GetState().GetDescription());
-                IComponent<GameObject>.AddPlayerMessage(this.fatigue.ToString());
+                this.disposition.CheckStateChange(obj: obj, fatigue: this.fatigue);
+
+                XRL.Messages.MessageQueue.AddPlayerMessage(this.disposition.GetState().GetDescription());
+                XRL.Messages.MessageQueue.AddPlayerMessage(this.fatigue.ToString());
             }
             else
             {
                 IncreaseFatigue(1);
-                this.disposition.CheckStateChange(this.fatigue);
-                IComponent<GameObject>.AddPlayerMessage(this.disposition.GetState().GetDescription());
+                this.disposition.CheckStateChange(obj: obj, fatigue: this.fatigue);
+
+                XRL.Messages.MessageQueue.AddPlayerMessage(this.disposition.GetState().GetDescription());
                 IComponent<GameObject>.AddPlayerMessage(this.fatigue.ToString());
             }
         }

@@ -1,6 +1,10 @@
 using States;
 using System.Collections.Generic;
 
+using XRL.World;
+
+using DeprivationEffects;
+
 namespace Thresholds
 {
     public class Disposition
@@ -29,34 +33,41 @@ namespace Thresholds
             return this.currentState;
         }
 
-        public bool CheckStateChange(int fatigue, int modifier = 1)
+        public void ApplyStatChanges(GameObject obj){
+            SleepDeprived effect = this.currentState.GetAppliedEffect();
+            effect.ApplyStatShifts(obj);
+        }
+
+        public void CheckStateChange(GameObject obj, int fatigue, int modifier = 1)
         {
-            if (fatigue <= this.possibleStates[0].GetValue(modifier))
-            {
-                this.SetState(this.possibleStates[0]);
-                return true;
-            }
-            else if (fatigue > this.possibleStates[0].GetValue(modifier) && fatigue <= this.possibleStates[1].GetValue(modifier))
-            {
-                this.SetState(this.possibleStates[1]);
-                return true;
-            }
-            else if (fatigue > this.possibleStates[1].GetValue(modifier) && fatigue <= this.possibleStates[2].GetValue(modifier))
-            {
-                this.SetState(this.possibleStates[2]);
-                return true;
-            }
-            else if (fatigue > this.possibleStates[2].GetValue(modifier) && fatigue <= this.possibleStates[3].GetValue(modifier))
-            {
-                this.SetState(this.possibleStates[3]);
-                return true;
-            }
-            else if (fatigue > this.possibleStates[3].GetValue(modifier))
+            if (fatigue > this.possibleStates[3].GetValue(modifier))
             {
                 this.SetState(this.possibleStates[4]);
-                return true;
+                this.ApplyStatChanges(obj);
+                return;
             }
-            return false;
+            else if (fatigue > this.possibleStates[2].GetValue(modifier))
+            {
+                this.SetState(this.possibleStates[3]);
+                this.ApplyStatChanges(obj);
+                return;
+            }
+            else if (fatigue > this.possibleStates[1].GetValue(modifier))
+            {
+                this.SetState(this.possibleStates[2]);
+                this.ApplyStatChanges(obj);
+                return;
+            }
+            else if (fatigue > this.possibleStates[0].GetValue(modifier))
+            {
+                this.SetState(this.possibleStates[1]);
+                this.ApplyStatChanges(obj);
+                return;
+            }
+
+            this.SetState(this.possibleStates[0]);
+            this.ApplyStatChanges(obj);
+            return;
         }
     }
 }
