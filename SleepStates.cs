@@ -1,34 +1,27 @@
+using System.Collections.Generic;
+
+using Interfaces;
 using DeprivationEffects;
+using Ranges = Dataclasses.SleepStateRanges;
+using Descriptions = Dataclasses.SleepStateDescriptions;
 
 namespace States
 {
-    public interface SleepState
-    {
-        int GetValue();
-        float GetValue(float modifier);
-        string GetDescription();
-        SleepDeprived GetAppliedEffect();
-    }
 
     public class Level0 : SleepState
     {
-        private readonly int limit = 1200;
-        private readonly string description = "Rested";
-        private SleepDeprived effect;
+        private readonly List<int> interval = new List<int> { Ranges.level0Start, Ranges.level0Start + Ranges.interval };  // [0, 1200]
+        private readonly string description = Descriptions.level0;
+        private DeprivationEffect effect;
 
         public Level0()
         {
-            this.effect = new SleepDeprived(amount: 1);
+            this.effect = new DeprivationEffect(amount: 0, disabled: true);
         }
 
-        public int GetValue()
+        public bool IsInInterval(float value)
         {
-            return this.limit;
-        }
-
-        public float GetValue(float modifier)
-        {
-            return this.limit * modifier;
+            return value >= this.interval[0] && value < this.interval[1];
         }
 
         public string GetDescription()
@@ -36,7 +29,7 @@ namespace States
             return this.description;
         }
 
-        public SleepDeprived GetAppliedEffect()
+        public DeprivationEffect GetAppliedEffect()
         {
             return this.effect;
         }
@@ -44,23 +37,18 @@ namespace States
 
     public class Level1 : SleepState
     {
-        private readonly int limit = 1800;
-        private readonly string description = "Tired";
-        private SleepDeprived effect;
+        private readonly List<int> interval = new List<int> { Ranges.level1Start, Ranges.level1Start + Ranges.interval };  // [1200, 2400]
+        private readonly string description = Descriptions.level1;
+        private DeprivationEffect effect;
 
         public Level1()
         {
-            this.effect = new SleepDeprived(amount: 2);
+            this.effect = new DeprivationEffect(amount: 2);
         }
 
-        public int GetValue()
+        public bool IsInInterval(float value)
         {
-            return this.limit;
-        }
-
-        public float GetValue(float modifier)
-        {
-            return this.limit * modifier;
+            return value >= this.interval[0] && value < this.interval[1];
         }
 
         public string GetDescription()
@@ -68,7 +56,7 @@ namespace States
             return this.description;
         }
 
-        public SleepDeprived GetAppliedEffect()
+        public DeprivationEffect GetAppliedEffect()
         {
             return this.effect;
         }
@@ -76,23 +64,18 @@ namespace States
 
     public class Level2 : SleepState
     {
-        private readonly int limit = 2400;
-        private readonly string description = "Drowsy";
-        private SleepDeprived effect;
+        private readonly List<int> interval = new List<int> { Ranges.level2Start, Ranges.level2Start + Ranges.interval };  // [2400, 3600]
+        private readonly string description = Descriptions.level2;
+        private DeprivationEffect effect;
 
         public Level2()
         {
-            this.effect = new SleepDeprived(amount: 3);
+            this.effect = new DeprivationEffect(amount: 3);
         }
 
-        public int GetValue()
+        public bool IsInInterval(float value)
         {
-            return this.limit;
-        }
-
-        public float GetValue(float modifier)
-        {
-            return this.limit * modifier;
+            return value >= this.interval[0] && value < this.interval[1];
         }
 
         public string GetDescription()
@@ -100,7 +83,7 @@ namespace States
             return this.description;
         }
 
-        public SleepDeprived GetAppliedEffect()
+        public DeprivationEffect GetAppliedEffect()
         {
             return this.effect;
         }
@@ -108,23 +91,18 @@ namespace States
 
     public class Level3 : SleepState
     {
-        private readonly int limit = 3000;
-        private readonly string description = "Fatigued";
-        private SleepDeprived effect;
+        private readonly List<int> interval = new List<int> { Ranges.level3Start, Ranges.level3Start + Ranges.interval };  // [3600, 4800]
+        private readonly string description = Descriptions.level3;
+        private DeprivationEffect effect;
 
         public Level3()
         {
-            this.effect = new SleepDeprived(amount: 4);
+            this.effect = new DeprivationEffect(amount: 4);
         }
 
-        public int GetValue()
+        public bool IsInInterval(float value)
         {
-            return this.limit;
-        }
-
-        public float GetValue(float modifier)
-        {
-            return this.limit * modifier;
+            return value >= this.interval[0] && value < this.interval[1];
         }
 
         public string GetDescription()
@@ -132,7 +110,7 @@ namespace States
             return this.description;
         }
 
-        public SleepDeprived GetAppliedEffect()
+        public DeprivationEffect GetAppliedEffect()
         {
             return this.effect;
         }
@@ -140,23 +118,18 @@ namespace States
 
     public class Level4 : SleepState
     {
-        private readonly int limit = 3001;
-        private readonly string description = "Exhausted";
-        private SleepDeprived effect;
+        private readonly List<int> interval = new List<int> { Ranges.level4Start, Ranges.level4Start + Ranges.interval };  // [4800, 6000]
+        private readonly string description = Descriptions.level4;
+        private DeprivationEffect effect;
 
         public Level4()
         {
-            this.effect = new SleepDeprived(amount: 5);
+            this.effect = new DeprivationEffect(amount: 5);
         }
 
-        public int GetValue()
+        public bool IsInInterval(float value)
         {
-            return this.limit;
-        }
-
-        public float GetValue(float modifier)
-        {
-            return this.limit * modifier;
+            return value >= this.interval[0];   // effective interval is 4800 to infinity
         }
 
         public string GetDescription()
@@ -164,7 +137,7 @@ namespace States
             return this.description;
         }
 
-        public SleepDeprived GetAppliedEffect()
+        public DeprivationEffect GetAppliedEffect()
         {
             return this.effect;
         }

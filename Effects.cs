@@ -3,11 +3,12 @@ using XRL.World;
 
 namespace DeprivationEffects
 {
-    public class SleepDeprived : Effect
+    public class DeprivationEffect : Effect
     {
         private int amount;
+        private bool disabled;
 
-        public SleepDeprived(int amount) : base()
+        public DeprivationEffect(int amount = 0, bool disabled = false) : base()
         {
             this.amount = amount;
         }

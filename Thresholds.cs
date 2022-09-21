@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using XRL.World;
 
+using Interfaces;
 using DeprivationEffects;
 
 namespace Thresholds
@@ -33,41 +34,22 @@ namespace Thresholds
             return this.currentState;
         }
 
-        public void ApplyStatChanges(GameObject obj){
-            SleepDeprived effect = this.currentState.GetAppliedEffect();
+        public void ApplyStatChanges(GameObject obj)
+        {
+            DeprivationEffect effect = this.currentState.GetAppliedEffect();
             effect.ApplyStatShifts(obj);
         }
 
-        public void CheckStateChange(GameObject obj, int fatigue, int modifier = 1)
+        public void CheckStateChange(int fatigue)
         {
-            if (fatigue > this.possibleStates[3].GetValue(modifier))
+            foreach (SleepState state in this.possibleStates.Values)
             {
-                this.SetState(this.possibleStates[4]);
-                this.ApplyStatChanges(obj);
-                return;
+                if (state.IsInInterval(fatigue))
+                {
+                    this.SetState(state);
+                }
+                
             }
-            else if (fatigue > this.possibleStates[2].GetValue(modifier))
-            {
-                this.SetState(this.possibleStates[3]);
-                this.ApplyStatChanges(obj);
-                return;
-            }
-            else if (fatigue > this.possibleStates[1].GetValue(modifier))
-            {
-                this.SetState(this.possibleStates[2]);
-                this.ApplyStatChanges(obj);
-                return;
-            }
-            else if (fatigue > this.possibleStates[0].GetValue(modifier))
-            {
-                this.SetState(this.possibleStates[1]);
-                this.ApplyStatChanges(obj);
-                return;
-            }
-
-            this.SetState(this.possibleStates[0]);
-            this.ApplyStatChanges(obj);
-            return;
         }
     }
 }

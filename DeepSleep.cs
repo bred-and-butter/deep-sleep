@@ -47,7 +47,7 @@ namespace DeepSleep
             if (obj.HasEffect("Asleep"))
             {
                 DecreaseFatigue(10);
-                this.disposition.CheckStateChange(obj: obj, fatigue: this.fatigue);
+                this.disposition.CheckStateChange(fatigue: this.fatigue);
 
                 XRL.Messages.MessageQueue.AddPlayerMessage(this.disposition.GetState().GetDescription());
                 XRL.Messages.MessageQueue.AddPlayerMessage(this.fatigue.ToString());
@@ -55,7 +55,7 @@ namespace DeepSleep
             else
             {
                 IncreaseFatigue(1);
-                this.disposition.CheckStateChange(obj: obj, fatigue: this.fatigue);
+                this.disposition.CheckStateChange(fatigue: this.fatigue);
 
                 XRL.Messages.MessageQueue.AddPlayerMessage(this.disposition.GetState().GetDescription());
                 IComponent<GameObject>.AddPlayerMessage(this.fatigue.ToString());
